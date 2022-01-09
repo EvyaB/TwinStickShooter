@@ -11,7 +11,9 @@ namespace TwinStick
         [SerializeField] private float dissapearTime = 3f;
 
         public delegate void CharacterHitEvent(int newHP);
+        public delegate void CharacterDeathEvent();
         public event CharacterHitEvent OnHit;
+        public event CharacterDeathEvent OnDeath;
 
         public int GetCurrentHealth()
         {
@@ -20,15 +22,15 @@ namespace TwinStick
 
         public void GetHit(int damage)
         {
+            if (!IsAlive()) return; // Ignore if already dead
+
             healthValue -= damage;
 
             // call OnHit event so other effects are activated (mostly UI)
             // Note that making the UI active instead of passive with events is probably better design, but I'm just testing the events in unity
-            if (OnHit != null)
-            {
-                OnHit(healthValue);
-            }
+            if (OnHit != null) OnHit(healthValue);
 
+            // Check if died due to this hit
             if (!IsAlive())
             {
                 GetKilled();
@@ -64,6 +66,9 @@ namespace TwinStick
             {
                 characterSprite.ActivateCharacterDeathEffects();
             }
+
+            // Activate other death effects (mostly UI)
+            if (OnDeath != null) OnDeath();
         }
 
         IEnumerator DissapearAfterDeath()
