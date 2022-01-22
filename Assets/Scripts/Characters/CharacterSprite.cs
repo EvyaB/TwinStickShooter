@@ -4,13 +4,40 @@ using UnityEngine;
 
 namespace TwinStick
 {
-    [RequireComponent(typeof(SpriteRenderer))]
     public class CharacterSprite : MonoBehaviour
     {
-        public void ActivateCharacterDeathEffects()
+        private Health m_characterHealth;
+
+        public void Start()
         {
-            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-            renderer.color = renderer.color * Color.gray;
+            m_characterHealth = GetComponent<Health>();
+            if (m_characterHealth != null)
+            {
+                m_characterHealth.OnDeath += ActivateCharacterDeathEffects;
+            }
+        }
+
+        public void ActivateCharacterDeathEffects(bool criticalDeath)
+        {
+            GreyOutSprites();
+
+            // Explode on critical damage
+            if (criticalDeath)
+            {
+                Explodable explodable = GetComponent<Explodable>();
+                if (explodable != null) { explodable.explode(); }
+            }
+        }
+
+        private void GreyOutSprites()
+        {
+            foreach (SpriteRenderer spriteRenderer in GetComponentsInChildren<SpriteRenderer>())
+            {
+                spriteRenderer.color = spriteRenderer.color * Color.gray;
+            }
+
+            SpriteRenderer selfSpriteRenderer = GetComponent<SpriteRenderer>();
+            if (selfSpriteRenderer) { selfSpriteRenderer.color = selfSpriteRenderer.color * Color.gray; }
         }
     }
 }

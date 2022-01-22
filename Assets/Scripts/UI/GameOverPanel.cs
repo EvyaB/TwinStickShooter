@@ -36,7 +36,7 @@ namespace TwinStick
                 child.gameObject.SetActive(false);
             }
         }
-        private void ShowPanel()
+        private void ShowPanel(bool criticalDeath)
         {
             foreach (Transform child in transform)
             {

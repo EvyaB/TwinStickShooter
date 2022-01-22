@@ -9,21 +9,31 @@ namespace TwinStick
         [SerializeField] private int healthValue = 1;
         [SerializeField] private bool dissapearAfterDeath = true;
         [SerializeField] private float dissapearTime = 3f;
+        [SerializeField] private int criticalDeathHealth = -1;
 
         public delegate void CharacterHitEvent(int newHP);
-        public delegate void CharacterDeathEvent();
+        public delegate void CharacterDeathEvent(bool criticalDeath);
         public event CharacterHitEvent OnHit;
         public event CharacterDeathEvent OnDeath;
+
+        private bool m_hasDied = false;
+
+        private void Start()
+        {
+            m_hasDied = false;
+        }
 
         public int GetCurrentHealth()
         {
             return healthValue;
         }
+        public bool DidCriticalDied()
+        {
+            return (GetCurrentHealth() <= criticalDeathHealth);
+        }
 
         public void GetHit(int damage)
         {
-            if (!IsAlive()) return; // Ignore if already dead
-
             healthValue -= damage;
 
             // call OnHit event so other effects are activated (mostly UI)
@@ -33,7 +43,7 @@ namespace TwinStick
             // Check if died due to this hit
             if (!IsAlive())
             {
-                GetKilled();
+                KillThis();
             }
         }
 
@@ -42,14 +52,11 @@ namespace TwinStick
             return (healthValue > 0);
         }
 
-        private void GetKilled()
+        private void KillThis()
         {
             ActivateDeathEffects();
 
-            if (dissapearAfterDeath)
-            {
-                StartCoroutine(DissapearAfterDeath());
-            }
+            m_hasDied = true;
         }
 
         private void ActivateDeathEffects()
@@ -61,14 +68,14 @@ namespace TwinStick
                 rigidBody.freezeRotation = false;
             }
 
-            CharacterSprite characterSprite = GetComponentInChildren<CharacterSprite>();
-            if (null != characterSprite) 
-            {
-                characterSprite.ActivateCharacterDeathEffects();
-            }
+            // Activate other death effects (UI, CharacterSprite effects...)
+            if (OnDeath != null) OnDeath(DidCriticalDied());
 
-            // Activate other death effects (mostly UI)
-            if (OnDeath != null) OnDeath();
+            // Disappear after some time
+            if (dissapearAfterDeath && !m_hasDied)
+            {
+                StartCoroutine(DissapearAfterDeath());
+            }
         }
 
         IEnumerator DissapearAfterDeath()

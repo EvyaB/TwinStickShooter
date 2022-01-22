@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace TwinStick
@@ -9,12 +10,9 @@ namespace TwinStick
         [SerializeField] private LevelCompletePanel levelCompletePanel;
         private List<IEnemyAI> enemies;
 
-        private int deadEnemiesCounter;
-
         private void Start()
         {
             enemies = new List<IEnemyAI>();
-            deadEnemiesCounter = 0;
 
             // Add all the children enemies into the list
             foreach (IEnemyAI enemy in GetComponentsInChildren<IEnemyAI>())
@@ -24,12 +22,10 @@ namespace TwinStick
             }
         }
 
-        private void ReportEnemyDeath()
+        private void ReportEnemyDeath(bool criticalDeath)
         {
-            deadEnemiesCounter++;
-
             // Check if all enemies are dead
-            if (deadEnemiesCounter >= enemies.Count) OnAllEnemiesDeath();
+            if (enemies.Any(enemy => enemy.GetComponent<Health>().IsAlive()) == false) OnAllEnemiesDeath();
         }
 
         private void OnAllEnemiesDeath()

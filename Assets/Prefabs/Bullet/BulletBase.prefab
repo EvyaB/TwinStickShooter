@@ -118,6 +118,7 @@ MonoBehaviour:
   bounceCounter: 0
   damage: 1
   playerBullet: 1
+  bulletExplosionForcePrefab: {fileID: 1842889324510228193, guid: bdbfefc4d4850044c840bf80dddf859a, type: 3}
 --- !u!50 &2738647831505684251
 Rigidbody2D:
   serializedVersion: 4

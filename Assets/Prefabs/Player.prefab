@@ -53,7 +53,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5086284537547112895}
   - component: {fileID: 3162753854979620347}
-  - component: {fileID: 189279755796025324}
   - component: {fileID: 1606943091}
   - component: {fileID: 5494627427831523978}
   m_Layer: 9
@@ -129,18 +128,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &189279755796025324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1144303396592161836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 801d0f628f2aa1b47b0855ac0c05b689, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1606943091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,6 +173,7 @@ GameObject:
   - component: {fileID: 7155924925914554040}
   - component: {fileID: 5617762231806565337}
   - component: {fileID: 1842113809}
+  - component: {fileID: 5108170633901454213}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -291,6 +279,19 @@ MonoBehaviour:
   healthValue: 3
   dissapearAfterDeath: 0
   dissapearTime: 3
+  criticalDeathHealth: -1
+--- !u!114 &5108170633901454213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7155924925914554038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 801d0f628f2aa1b47b0855ac0c05b689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7741448639610428981
 PrefabInstance:
   m_ObjectHideFlags: 0

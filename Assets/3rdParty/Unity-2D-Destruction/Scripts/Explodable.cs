@@ -68,8 +68,8 @@ public class Explodable : MonoBehaviour
             var renderer = spriteRenderer;
             var colider = gameObject.GetComponent<Collider2D>();
 
-            Destroy(renderer);
-            Destroy(colider);
+            renderer.enabled = false;
+            colider.enabled = false;
         }
     }
     /// <summary>

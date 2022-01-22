@@ -13,6 +13,7 @@ namespace TwinStick
         [SerializeField] private int bounceCounter = 0;
         [SerializeField] private int damage = 1;
         [SerializeField] private bool playerBullet = true;
+        [SerializeField] private ExplosionForce bulletExplosionForcePrefab;
 
         private Rigidbody2D m_rigidBody;
 
@@ -30,37 +31,56 @@ namespace TwinStick
         private void OnCollisionEnter2D(Collision2D collision)
         {
             // Check if hit live entity and react accordingly
-            if ((collision.gameObject.tag == "Player" && !playerBullet) || (collision.gameObject.tag == "Enemy" && playerBullet))
+            if ((collision.gameObject.tag == "Player" && !playerBullet) || (collision.gameObject.tag == "Enemy"))
             {
-                Health targetHealth = collision.gameObject.GetComponent<Health>();
-                if (null != targetHealth)
-                {
-                    targetHealth.GetHit(this.damage);
-                }
+                CollideWithCharacter(collision);
+            }
+            else
+            {
+                CollideWithWall(collision);
+            }
+        }
 
-                IEnemyAI enemyAi = collision.gameObject.GetComponent<IEnemyAI>();
-                if (null != enemyAi)
-                {
-                    // Push enemies a bit when they are hit
-                    enemyAi.PushThisEnemy(-transform.up, 1f);
-                }
+        private void CollideWithCharacter(Collision2D collision)
+        {
+            Health targetHealth = collision.gameObject.GetComponent<Health>();
+            if (null != targetHealth)
+            {
+                targetHealth.GetHit(this.damage);
+            }
 
+            IEnemyAI enemyAi = collision.gameObject.GetComponent<IEnemyAI>();
+            if (null != enemyAi)
+            {
+                // Push enemies a bit when they are hit
+                enemyAi.PushThisEnemy(-transform.up, 1f);
+
+                // 'explode' enemy if they get 'critcially dead'
+                if (bulletExplosionForcePrefab != null && targetHealth.DidCriticalDied())
+                { 
+                    ExplosionForce ef = Instantiate(bulletExplosionForcePrefab, Vector3.zero, Quaternion.identity, collision.transform);
+                    ef.doExplosion(Vector3.zero);
+                };
+            }
+
+            Destroy(this.gameObject);
+        }
+
+
+
+        private void CollideWithWall(Collision2D collision)
+        {
+            // Hit a wall, bounce if there are bounces left, otherwise disappear
+            if (bounceCounter <= 0)
+            {
                 Destroy(this.gameObject);
             }
             else
             {
-                // Hit a wall, bounce if there are bounces left, otherwise disappear
-                if (bounceCounter <= 0)
-                {
-                    Destroy(this.gameObject);
-                }
-                else
-                {
-                    // bounce the bullet
-                    bounceCounter--;
-                    var direction = Vector2.Reflect(m_rigidBody.velocity.normalized, collision.contacts[0].normal);
-                    m_rigidBody.MoveRotation(Quaternion.LookRotation(-direction, Vector3.forward)); // Not sure why turning 'directino' to negative, but since there is not enough documentation on Vector2.Reflect idk...
-                }
+                // bounce the bullet
+                bounceCounter--;
+                var direction = Vector2.Reflect(m_rigidBody.velocity.normalized, collision.contacts[0].normal);
+                m_rigidBody.MoveRotation(Quaternion.LookRotation(-direction, Vector3.forward)); // Not sure why turning 'directino' to negative, but since there is not enough documentation on Vector2.Reflect idk...
             }
         }
     }
