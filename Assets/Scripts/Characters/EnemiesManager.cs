@@ -22,10 +22,15 @@ namespace TwinStick
             }
         }
 
+        public bool AnyEnemiesAlive()
+        {
+            return (enemies.Any(enemy => enemy.GetComponent<Health>().IsAlive()));
+        }
+
         private void ReportEnemyDeath(bool criticalDeath)
         {
             // Check if all enemies are dead
-            if (enemies.Any(enemy => enemy.GetComponent<Health>().IsAlive()) == false) OnAllEnemiesDeath();
+            if (AnyEnemiesAlive() == false) OnAllEnemiesDeath();
         }
 
         private void OnAllEnemiesDeath()
