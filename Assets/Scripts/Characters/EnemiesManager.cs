@@ -12,6 +12,8 @@ namespace TwinStick
 
         private void Start()
         {
+            if (levelCompletePanel == null) levelCompletePanel = GameObject.FindObjectOfType<LevelCompletePanel>();
+
             enemies = new List<IEnemyAI>();
 
             // Add all the children enemies into the list

@@ -23,15 +23,15 @@ namespace TwinStick
             m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space) && DidWin())
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                SceneManager.LoadScene(nextSceneIndex);
             }
             if (Input.GetKeyDown(KeyCode.R) && DidLose())
             {
-                SceneManager.LoadScene(nextSceneIndex);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
 
