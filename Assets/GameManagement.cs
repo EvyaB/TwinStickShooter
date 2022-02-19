@@ -29,7 +29,7 @@ namespace TwinStick
             {
                 SceneManager.LoadScene(nextSceneIndex);
             }
-            if (Input.GetKeyDown(KeyCode.R) && DidLose())
+            if (Input.GetKeyDown(KeyCode.R))
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }

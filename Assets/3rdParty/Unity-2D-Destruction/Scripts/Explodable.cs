@@ -127,6 +127,7 @@ public class Explodable : MonoBehaviour
     /// </summary>
     private void generateFragments(bool meshSaved = false)
     {
+#if UNITY_EDITOR
         fragments = new List<GameObject>();
 
         Material mat = null;
@@ -190,7 +191,9 @@ public class Explodable : MonoBehaviour
                 addon.OnFragmentsGenerated(fragments);
             }
         }
+#endif
     }
+
     private void setPolygonsForDrawing()
     {
         polygons.Clear();
